@@ -1,0 +1,49 @@
+/* Animation visibility */
+.animate-visible {
+  opacity: 1 !important;
+  transform: translateY(0) translateX(0) scale(1) !important;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background-color: #e3af5a;
+  color: #000;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid #e3af5a;
+  outline-offset: 2px;
+}
+
+/* Image loading placeholder */
+img {
+  background-color: #151515;
+}
+
+/* Prevent text selection on interactive elements */
+button,
+a {
+  user-select: none;
+}
+
+/* Responsive typography */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .whatsapp-float,
+  .phone-float,
+  header {
+    display: none !important;
+  }
+}
