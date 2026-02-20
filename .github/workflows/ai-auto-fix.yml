@@ -1,0 +1,37 @@
+name: AI Auto Fix & Security Scan
+
+on:
+  push:
+    branches: 
+      - main
+  pull_request:
+
+jobs:
+  lint-build-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run ESLint Auto Fix
+        run: npx eslint . --fix || true
+
+      - name: Build Project
+        run: npm run build || true
+
+      - name: Commit Auto Fixes
+        run: |
+          git config --global user.name "auto-fix-bot"
+          git config --global user.email "bot@users.noreply.github.com"
+          git add .
+          git commit -m "Auto fix ESLint issues" || echo "No changes to commit"
+          git push
+
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript"
