@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { Check, ExternalLink, Gem, Grid3X3, Layers, Square } from 'lucide-react';
+import { Check, ExternalLink, Gem, Grid3X3, Layers, Image as ImageIcon, X } from 'lucide-react';
 
 const MarbleCatalog = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [activeCategory, setActiveCategory] = useState<'natural' | 'artificial' | 'alternative'>('natural');
+  const [activeCategory, setActiveCategory] = useState<'granite' | 'corian' | 'all'>('all');
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -23,148 +24,43 @@ const MarbleCatalog = () => {
     return () => observer.disconnect();
   }, []);
 
-  const naturalMarble = [
-    {
-      name: 'رخام كرارا',
-      origin: 'إيطاليا',
-      color: '#F5F5F5',
-      pattern: 'عروق رمادية خفيفة',
-      uses: 'أرضيات، حوائط، مطابخ',
-      price: 'فاخر',
-    },
-    {
-      name: 'رخام بوتشينو',
-      origin: 'إيطاليا',
-      color: '#E8E0D5',
-      pattern: 'بيج مع عروق ذهبية',
-      uses: 'أرضيات، درج، واجهات',
-      price: 'فاخر',
-    },
-    {
-      name: 'رخام أسود ماركينا',
-      origin: 'إسبانيا',
-      color: '#1a1a1a',
-      pattern: 'أسود مع عروق بيضاء',
-      uses: 'ديكورات، أرضيات فاخرة',
-      price: 'فاخر جداً',
-    },
-    {
-      name: 'رخام أخضر هندي',
-      origin: 'الهند',
-      color: '#2d5016',
-      pattern: 'أخضر مع تدرجات',
-      uses: 'ديكورات، تفاصيل فنية',
-      price: 'مميز',
-    },
-  ];
+  // مصفوفة الصور المستخرجة (سيتم ملؤها بأسماء الملفات الفعلية بعد الرفع)
+  const graniteImages = Array.from({ length: 20 }, (_, i) => ({
+    id: `g-${i}`,
+    category: 'granite',
+    title: `جرانيت موديل ${i + 1}`,
+    url: `/images/granite/img-${i.toString().padStart(3, '0')}.jpg`,
+  }));
 
-  const artificialMarble = [
-    {
-      name: 'كوريان',
-      origin: 'صناعي',
-      color: '#F8F8F8',
-      pattern: 'متجانس بدون عروق',
-      uses: 'مطابخ، حمامات، أسطح',
-      price: 'متوسط',
-    },
-    {
-      name: 'كوارز ستون',
-      origin: 'صناعي',
-      color: '#E8E8E8',
-      pattern: 'عروق محاكاة طبيعية',
-      uses: 'مطابخ، أرضيات، درج',
-      price: 'متوسط إلى فاخر',
-    },
-    {
-      name: 'سيراميك رخامي',
-      origin: 'صناعي',
-      color: '#DDD',
-      pattern: 'تصاميم متنوعة',
-      uses: 'أرضيات، حوائط، خارجي',
-      price: 'اقتصادي',
-    },
-    {
-      name: 'بورسلان رخامي',
-      origin: 'صناعي',
-      color: '#F0F0F0',
-      pattern: 'دقة عالية في المحاكاة',
-      uses: 'أرضيات كبيرة، خارجي',
-      price: 'متوسط',
-    },
-  ];
+  const corianImages = Array.from({ length: 15 }, (_, i) => ({
+    id: `c-${i}`,
+    category: 'corian',
+    title: `كوريان موديل ${i + 1}`,
+    url: `/images/corian/img-${i.toString().padStart(3, '0')}.jpg`,
+  }));
 
-  const alternativeMaterials = [
-    {
-      name: 'بديل الرخام PVC',
-      origin: 'صناعي',
-      color: '#E5E5E5',
-      pattern: 'خفيف وسهل التركيب',
-      uses: 'حوائط، ديكورات سريعة',
-      price: 'اقتصادي',
-    },
-    {
-      name: 'بديل الرخام أكريليك',
-      origin: 'صناعي',
-      color: '#F0F0F0',
-      pattern: 'لمعان عالي ومتانة',
-      uses: 'ديكورات داخلية فاخرة',
-      price: 'متوسط',
-    },
-    {
-      name: 'جبس رخامي',
-      origin: 'صناعي',
-      color: '#EEE',
-      pattern: 'قابل للتشكيل',
-      uses: 'ديكورات، أعمدة، كرانيش',
-      price: 'اقتصادي',
-    },
-    {
-      name: 'خشب رخامي',
-      origin: 'صناعي',
-      color: '#C4A77D',
-      pattern: 'مزيج من الخشب والرخام',
-      uses: 'أثاث، ديكورات خاصة',
-      price: 'مميز',
-    },
-  ];
+  const allImages = [...graniteImages, ...corianImages];
+
+  const filteredImages = activeCategory === 'all' 
+    ? allImages 
+    : allImages.filter(img => img.category === activeCategory);
 
   const categories = [
-    { id: 'natural', name: 'رخام طبيعي', icon: Gem },
-    { id: 'artificial', name: 'رخام صناعي', icon: Grid3X3 },
-    { id: 'alternative', name: 'بدائل الرخام', icon: Layers },
+    { id: 'all', name: 'الكل', icon: Grid3X3 },
+    { id: 'granite', name: 'جرانيت', icon: Gem },
+    { id: 'corian', name: 'كوريان', icon: Layers },
   ];
 
-  const getCurrentData = () => {
-    switch (activeCategory) {
-      case 'natural':
-        return naturalMarble;
-      case 'artificial':
-        return artificialMarble;
-      case 'alternative':
-        return alternativeMaterials;
-      default:
-        return naturalMarble;
-    }
-  };
-
   return (
-    <section
-      id="marble-catalog"
-      ref={sectionRef}
-      className="section-padding bg-black"
-    >
+    <section id="marble-catalog" ref={sectionRef} className="section-padding bg-black min-h-screen">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2
-            className="animate-on-scroll opacity-0 translate-y-8 transition-all duration-1000 section-title gold-text"
-          >
-            كتالوج الرخام والأحجار
+          <h2 className="animate-on-scroll opacity-0 translate-y-8 transition-all duration-1000 section-title gold-text">
+            كتالوج المنتجات الحصري
           </h2>
-          <p
-            className="animate-on-scroll opacity-0 translate-y-8 transition-all duration-1000 delay-200 text-[#c5c5c5] mt-8 max-w-2xl mx-auto"
-          >
-            تشكيلة واسعة من الرخام الطبيعي والصناعي وبدائله بأجود الأنواع
+          <p className="animate-on-scroll opacity-0 translate-y-8 transition-all duration-1000 delay-200 text-[#c5c5c5] mt-8 max-w-2xl mx-auto">
+            استعرض مجموعتنا الواسعة من الجرانيت والكوريان المستخرجة مباشرة من أحدث الكتالوجات العالمية
           </p>
         </div>
 
@@ -174,9 +70,9 @@ const MarbleCatalog = () => {
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id as any)}
-              className={`flex items-center gap-2 px-6 py-4 rounded-xl font-bold transition-all ${
+              className={`flex items-center gap-2 px-8 py-4 rounded-xl font-bold transition-all duration-300 ${
                 activeCategory === cat.id
-                  ? 'bg-gradient-to-r from-[#e3af5a] to-[#c49a4d] text-black'
+                  ? 'bg-gradient-to-r from-[#e3af5a] to-[#c49a4d] text-black shadow-[0_0_20px_rgba(227,175,90,0.3)]'
                   : 'bg-[#151515] text-white border border-[#2a2a2a] hover:border-[#e3af5a]'
               }`}
             >
@@ -186,81 +82,62 @@ const MarbleCatalog = () => {
           ))}
         </div>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {getCurrentData().map((item, index) => (
+        {/* Image Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          {filteredImages.map((img, index) => (
             <div
-              key={index}
-              className="animate-on-scroll opacity-0 translate-y-8 transition-all duration-1000"
-              style={{ transitionDelay: `${300 + index * 100}ms` }}
+              key={img.id}
+              className="animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 group cursor-pointer"
+              style={{ transitionDelay: `${index * 50}ms` }}
+              onClick={() => setSelectedImage(img.url)}
             >
-              <div className="service-card p-6">
-                <div className="flex flex-col md:flex-row gap-6">
-                  {/* Color Sample */}
-                  <div className="flex-shrink-0">
-                    <div
-                      className="w-24 h-24 rounded-xl shadow-lg"
-                      style={{ backgroundColor: item.color }}
-                    />
-                  </div>
-
-                  {/* Product Info */}
-                  <div className="flex-grow">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-xl font-bold text-white">{item.name}</h3>
-                      <span className="text-[#e3af5a] text-sm font-medium">{item.origin}</span>
-                    </div>
-                    <p className="text-[#c5c5c5] mb-3">{item.pattern}</p>
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {item.uses.split('،').map((use, i) => (
-                        <span
-                          key={i}
-                          className="bg-[#e3af5a]/10 text-[#e3af5a] px-3 py-1 rounded-full text-sm"
-                        >
-                          {use.trim()}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-[#e3af5a]" />
-                      <span className="text-[#c5c5c5] text-sm">مستوى السعر: {item.price}</span>
-                    </div>
-                  </div>
+              <div className="relative aspect-square overflow-hidden rounded-2xl bg-[#151515] border border-[#2a2a2a] group-hover:border-[#e3af5a] transition-all">
+                <img
+                  src={img.url}
+                  alt={img.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400?text=Image+Coming+Soon';
+                  }}
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <ImageIcon className="text-[#e3af5a] w-10 h-10" />
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                  <p className="text-white text-sm font-bold">{img.title}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Features */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-          <div className="bg-[#151515] rounded-xl p-6 text-center">
-            <Gem className="w-10 h-10 text-[#e3af5a] mx-auto mb-4" />
-            <h4 className="text-white font-bold mb-2">جودة عالية</h4>
-            <p className="text-[#c5c5c5] text-sm">نختار أفضل أنواع الرخام من مصادر موثوقة</p>
+        {/* Lightbox */}
+        {selectedImage && (
+          <div 
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-10"
+            onClick={() => setSelectedImage(null)}
+          >
+            <button className="absolute top-6 right-6 text-white hover:text-[#e3af5a] transition-colors">
+              <X className="w-10 h-10" />
+            </button>
+            <img 
+              src={selectedImage} 
+              alt="Preview" 
+              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+            />
           </div>
-          <div className="bg-[#151515] rounded-xl p-6 text-center">
-            <Square className="w-10 h-10 text-[#e3af5a] mx-auto mb-4" />
-            <h4 className="text-white font-bold mb-2">تقطيع دقيق</h4>
-            <p className="text-[#c5c5c5] text-sm">أحدث تقنيات القطع والتشكيل باستخدام CNC</p>
-          </div>
-          <div className="bg-[#151515] rounded-xl p-6 text-center">
-            <Layers className="w-10 h-10 text-[#e3af5a] mx-auto mb-4" />
-            <h4 className="text-white font-bold mb-2">تركيب احترافي</h4>
-            <p className="text-[#c5c5c5] text-sm">فريق متخصص في تركيب جميع أنواع الرخام</p>
-          </div>
-        </div>
+        )}
 
         {/* CTA */}
-        <div className="text-center mt-12">
+        <div className="text-center mt-20">
           <a
             href="https://wa.me/971508423094"
             target="_blank"
             rel="noopener noreferrer"
-            className="gold-btn"
+            className="gold-btn inline-flex items-center gap-3 px-10 py-5 text-lg"
           >
-            <ExternalLink className="w-5 h-5" />
-            استفسر عن الأسعار
+            <ExternalLink className="w-6 h-6" />
+            اطلب تسعيرة لهذا الموديل
           </a>
         </div>
       </div>

@@ -52,8 +52,8 @@ const Contact = () => {
     {
       icon: MapPin,
       title: 'العنوان',
-      content: '34 شارع الأقحوان – النود – العين',
-      link: 'https://goo.gl/maps/zS5miJBmakUU75pB6',
+      content: 'العين - النود - معسكر الشركات',
+      link: 'https://maps.app.goo.gl/oDD5rQsekaYYGbHq6?g_st=ac',
     },
     {
       icon: Phone,
@@ -76,14 +76,12 @@ const Contact = () => {
   ];
 
   const services = [
+    'توريد رخام وجرانيت',
+    'تركيب مغاسل رخامية',
+    'كونترات مطابخ',
+    'درج داخلي وخارجي',
+    'أرضيات وحوائط',
     'صيانة عامة',
-    'كهرباء منازل',
-    'سباكة',
-    'تركيب جبس بورد',
-    'دهانات وتشطيبات',
-    'عزل أسطح',
-    'تركيب سيراميك',
-    'بديل رخام وخشب',
     'أخرى',
   ];
 
@@ -103,7 +101,7 @@ const Contact = () => {
           <p
             className="animate-on-scroll opacity-0 translate-y-8 transition-all duration-1000 delay-200 text-[#c5c5c5] mt-8 max-w-2xl mx-auto"
           >
-            نحن هنا لمساعدتك. تواصل معنا الآن واحصل على عرض سعر مميز
+            نحن هنا لخدمتكم في فرعنا الجديد بالعين. تواصل معنا الآن واحصل على عرض سعر مميز
           </p>
         </div>
 
@@ -237,7 +235,7 @@ const Contact = () => {
             </div>
 
             <a
-              href="https://goo.gl/maps/zS5miJBmakUU75pB6"
+              href="https://maps.app.goo.gl/oDD5rQsekaYYGbHq6?g_st=ac"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 flex items-center justify-center gap-2 text-[#e3af5a] hover:text-[#f3d5a1] transition-colors"
